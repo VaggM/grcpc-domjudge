@@ -1,4 +1,4 @@
-# https://hub.docker.com/r/domjudge/domserver/
+
 version: '3'
 
 services:
@@ -13,10 +13,10 @@ services:
       # Useful to connect a local MySQL client / GUI
       - 13306:3306
     command: --max-connections=1000 --max-allowed-packet=512M
-    volumes:
-      - djdb:/var/lib/mysql
+    # volumes:
+    #   - ./data:/var/lib/mysql
 
-  domserver:
+  domjudge:
     image: domjudge/domserver:8.2.2
     ports:
       - 12345:80
@@ -26,23 +26,23 @@ services:
       - MYSQL_USER=domjudge
       - MYSQL_PASSWORD=domjudge
       - MYSQL_DATABASE=domjudge
-    volumes:
-      - ./pass/restapi.secret:/opt/domjudge/domserver/etc/restapi.secret
+    # volumes:
+    #   - ./pass/:/opt/domjudge/domserver/etc/
     restart: unless-stopped
 
-  # judgehost:
-  #   image: domjudge/judgehost:8.2.2
-  #   volumes:
-  #     - djj:/sys/fs/cgroup
-  #   environment:
-  #     - DOMSERVER_BASEURL=http://192.168.1.2:12345
-  #     - DAEMON_ID=0
-  #     - JUDGEDAEMON_PASSWORD=vXS2bxeIUGm1EgL/o5tlXchhsDYwV8rE
-  #   restart: unless-stopped
+  judgehost:
+    image: domjudge/judgehost:8.2.2
+    volumes:
+      - djj:/sys/fs/cgroup
+    environment:
+      - DOMSERVER_BASEURL=http://192.168.1.2:12345
+      - DAEMON_ID=0
+      - JUDGEDAEMON_PASSWORD=SIindzAfM6bXXcldjDNFtwgkrKpEyOHm
+    restart: unless-stopped
 
 volumes:
   djdb:
-    external: false
+    external: true
   djj:
     external: false
 # docker exec -it domserver cat /opt/domjudge/domserver/etc/initial_admin_password.secret
