@@ -1,49 +1,78 @@
-# https://hub.docker.com/r/domjudge/domserver/
-version: '3'
+version: '3.8'
 
 services:
   mariadb:
-    image: mariadb
+    image: mariadb:11.3.2
+    env_file:
+      - .env
     environment:
-      - MYSQL_ROOT_PASSWORD=domjudge
-      - MYSQL_USER=domjudge
-      - MYSQL_PASSWORD=domjudge
-      - MYSQL_DATABASE=domjudge
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
     ports:
       # Useful to connect a local MySQL client / GUI
       - 13306:3306
     command: --max-connections=1000 --max-allowed-packet=512M
-    volumes:
-      - djdb:/var/lib/mysql
+    restart: unless-stopped
+    # volumes:
+    #   - djdb:/var/lib/mysql
 
   domserver:
     image: domjudge/domserver:8.2.2
+    hostname: domserver
     ports:
       - 12345:80
+    env_file:
+      - .env
     environment:
-      - MYSQL_HOST=mariadb
-      - MYSQL_ROOT_PASSWORD=domjudge
-      - MYSQL_USER=domjudge
-      - MYSQL_PASSWORD=domjudge
-      - MYSQL_DATABASE=domjudge
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+
+  judge0:
+    hostname: judgedaemon-0
+    image: domjudge/judgehost:8.2.2
     volumes:
-      - ./pass/restapi.secret:/opt/domjudge/domserver/etc/restapi.secret
+      - /sys/fs/cgroup:/sys/fs/cgroup
+    env_file:
+      - .env
+    environment:
+      - DAEMON_ID=0
+      - JUDGEDAEMON_PASSWORD=${JUDGEDAEMON_PASSWORD}
+    restart: unless-stopped
+  
+  judge1:
+    hostname: judgedaemon-1
+    image: domjudge/judgehost:8.2.2
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup
+    env_file:
+      - .env
+    environment:
+      - DAEMON_ID=0
+      - JUDGEDAEMON_PASSWORD=${JUDGEDAEMON_PASSWORD}
     restart: unless-stopped
 
-  # judgehost:
-  #   image: domjudge/judgehost:8.2.2
-  #   volumes:
-  #     - djj:/sys/fs/cgroup
-  #   environment:
-  #     - DOMSERVER_BASEURL=http://192.168.1.2:12345
-  #     - DAEMON_ID=0
-  #     - JUDGEDAEMON_PASSWORD=vXS2bxeIUGm1EgL/o5tlXchhsDYwV8rE
-  #   restart: unless-stopped
+  judge2:
+    hostname: judgedaemon-2
+    image: domjudge/judgehost:8.2.2
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup
+    env_file:
+      - .env
+    environment:
+      - DAEMON_ID=0
+      - JUDGEDAEMON_PASSWORD=${JUDGEDAEMON_PASSWORD}
+    restart: unless-stopped
 
 volumes:
   djdb:
-    external: false
-  djj:
-    external: false
+    external: true
 # docker exec -it domserver cat /opt/domjudge/domserver/etc/initial_admin_password.secret
 # docker exec -it domserver cat /opt/domjudge/domserver/etc/restapi.secret
