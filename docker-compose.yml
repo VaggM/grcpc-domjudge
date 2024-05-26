@@ -18,7 +18,7 @@ services:
     # volumes:
     #   - djdb:/var/lib/mysql
 
-  domserver:
+  domjudge:
     image: domjudge/domserver:8.2.2
     hostname: domserver
     ports:
