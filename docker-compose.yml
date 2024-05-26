@@ -55,7 +55,7 @@ services:
     env_file:
       - .env
     environment:
-      - DAEMON_ID=0
+      - DAEMON_ID=1
       - JUDGEDAEMON_PASSWORD=${JUDGEDAEMON_PASSWORD}
     restart: unless-stopped
 
@@ -67,7 +67,7 @@ services:
     env_file:
       - .env
     environment:
-      - DAEMON_ID=0
+      - DAEMON_ID=2
       - JUDGEDAEMON_PASSWORD=${JUDGEDAEMON_PASSWORD}
     restart: unless-stopped
 
