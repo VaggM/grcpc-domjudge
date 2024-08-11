@@ -35,44 +35,44 @@ services:
     depends_on:
       - mariadb
 
-  judge0:
-    hostname: judgedaemon-0
-    image: domjudge/judgehost:8.2.2
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup
-    env_file:
-      - .env
-    environment:
-      - DAEMON_ID=0
-      - JUDGEDAEMON_PASSWORD=${JUDGEDAEMON_PASSWORD}
-    restart: unless-stopped
+#   judge0:
+#     hostname: judgedaemon-0
+#     image: domjudge/judgehost:8.2.2
+#     volumes:
+#       - /sys/fs/cgroup:/sys/fs/cgroup
+#     env_file:
+#       - .env
+#     environment:
+#       - DAEMON_ID=0
+#       - JUDGEDAEMON_PASSWORD=${JUDGEDAEMON_PASSWORD}
+#     restart: unless-stopped
   
-  judge1:
-    hostname: judgedaemon-1
-    image: domjudge/judgehost:8.2.2
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup
-    env_file:
-      - .env
-    environment:
-      - DAEMON_ID=1
-      - JUDGEDAEMON_PASSWORD=${JUDGEDAEMON_PASSWORD}
-    restart: unless-stopped
+#   judge1:
+#     hostname: judgedaemon-1
+#     image: domjudge/judgehost:8.2.2
+#     volumes:
+#       - /sys/fs/cgroup:/sys/fs/cgroup
+#     env_file:
+#       - .env
+#     environment:
+#       - DAEMON_ID=1
+#       - JUDGEDAEMON_PASSWORD=${JUDGEDAEMON_PASSWORD}
+#     restart: unless-stopped
 
-  judge2:
-    hostname: judgedaemon-2
-    image: domjudge/judgehost:8.2.2
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup
-    env_file:
-      - .env
-    environment:
-      - DAEMON_ID=2
-      - JUDGEDAEMON_PASSWORD=${JUDGEDAEMON_PASSWORD}
-    restart: unless-stopped
+#   judge2:
+#     hostname: judgedaemon-2
+#     image: domjudge/judgehost:8.2.2
+#     volumes:
+#       - /sys/fs/cgroup:/sys/fs/cgroup
+#     env_file:
+#       - .env
+#     environment:
+#       - DAEMON_ID=2
+#       - JUDGEDAEMON_PASSWORD=${JUDGEDAEMON_PASSWORD}
+#     restart: unless-stopped
 
-volumes:
-  djdb:
-    external: true
+# volumes:
+#   djdb:
+#     external: true
 # docker exec -it domserver cat /opt/domjudge/domserver/etc/initial_admin_password.secret
 # docker exec -it domserver cat /opt/domjudge/domserver/etc/restapi.secret

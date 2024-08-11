@@ -38,4 +38,4 @@ else
 fi
 
 # Run judges
-docker compose up -d --build judge0 judge1 judge2
+# docker compose up -d --build judge0 judge1 judge2
